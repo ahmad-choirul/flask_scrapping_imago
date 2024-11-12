@@ -10,38 +10,44 @@
     <div class="container">
         <h1>Scraping Detik.com imago</h1>
         <form action="/scrap-detik" method="GET">
-            <div class="form-group">
-                <label for="search_term">Cari Berita:</label>
-                <input type="text" class="form-control" id="search_term" name="search_term" placeholder="Masukkan kata kunci" value="{{search_term}}">
+            <div class="form-group d-flex justify-content-between">
+                <input type="text" class="form-control me-2" id="search_term" name="search_term" placeholder="Masukkan kata kunci" value="{{search_term}}">
+                <button type="submit" class="btn btn-primary">Cari</button>
             </div>
-            <button type="submit" class="btn btn-primary">Cari</button>
         </form>
         <div class="row">
-            {% for page in data %}
-                <div class="col-md-12">
-                    <h2>Halaman {{ loop.index }}</h2>
-                    {% for article in page %}
-                        <div class="card mb-3">
-                            <div class="media">
-                                <img src="{{ article.image_link }}" class="mr-3" alt="..." style="width: 200px; height: auto;">
-                                <div class="media-body">
-                                    <h5 class="mt-0 mb-1">{{ article.title }}</h5>
-                                    <p>{{ article.sub_title }}</p>
-                                    <p>{{ article.body_text }}</p>
-                                    <p><small class="text-muted">{{ article.publication_time }}</small></p>
+            {% if data %}
+                {% for page in data %}
+                    <div class="col-md-12">
+                        <h2>Halaman {{ loop.index }}</h2>
+                        {% for article in page %}
+                            <div class="card mb-3">
+                                <div class="media">
+                                    <img src="{{ article.image_link }}" class="mr-3" alt="..." style="width: 200px; height: auto;">
+                                    <div class="media-body">
+                                        <h5 class="mt-0 mb-1">{{ article['title'] }}</h5>
+                                        <p>{{ article['sub_title'] }}</p>
+                                        <p>{{ article['body_text'] }}</p>
+                                        <p><small class="text-muted">{{ article['publication_time'] }}</small></p>
+                                    </div>
                                 </div>
-                            </div>
 
-                        </div>
-                    {% endfor %}
-                </div>
-            {% endfor %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>Tidak ada data.</p>
+                <p>periksa query pencarian atau koneksi internet anda</p>
+            {% endif %}
         </div>
         <nav aria-label="Page navigation example">
             <ul class="pagination">
-                {% for page in range(data|length) %}
-                    <li class="page-item"><a class="page-link" href="/scrap-detik?page={{ page }}">{{ page + 1 }}</a></li>
-                {% endfor %}
+                {% if data %}
+                    {% for page in range(data|length) %}
+                        <li class="page-item"><a class="page-link" href="/scrap-detik?page={{ page }}">{{ page + 1 }}</a></li>
+                    {% endfor %}
+                {% endif %}
             </ul>
         </nav>
     </div>

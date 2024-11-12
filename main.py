@@ -70,16 +70,21 @@ def login():
 def logout():
     session.pop('username', None)
     return redirect('/login')
-
-
 # Fungsi untuk mengambil data dari detik.com
 def scrap_detik(search_term=None):
     # Setel URL pencarian dengan default 'jember'
     url = f"https://www.detik.com/search/searchall?query={search_term}" if search_term else "https://www.detik.com/search/searchall?query=jember"
     headers = {'User-Agent': 'Mozilla/5.0'}
-    response = requests.get(url, headers=headers)
-    soup = BeautifulSoup(response.text, 'html.parser')
-
+    
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()  # Raise an HTTPError if the HTTP request returned an unsuccessful status code
+        soup = BeautifulSoup(response.text, 'html.parser')
+    except requests.exceptions.ConnectionError:
+        return render_template('error.html', error="Tidak ada koneksi internet. Silakan coba lagi nanti.")
+    except requests.exceptions.HTTPError:
+        return render_template('error.html', error="Gagal mengambil data. Silakan coba lagi nanti.")
+    
     # ambil seluruh data dan di masukan ke variabel articles
     articles = soup.find_all('article')
     data = []
