@@ -78,11 +78,11 @@ def scrap_detik(search_term=None):
     
     try:
         response = requests.get(url, headers=headers)
-        response.raise_for_status()  # Raise an HTTPError if the HTTP request returned an unsuccessful status code
+        response.raise_for_status()  
         soup = BeautifulSoup(response.text, 'html.parser')
-    except requests.exceptions.ConnectionError:
+    except requests.exceptions.ConnectionError: # jika tidak ada koneksi
         return render_template('error.html', error="Tidak ada koneksi internet. Silakan coba lagi nanti.")
-    except requests.exceptions.HTTPError:
+    except requests.exceptions.HTTPError: # jika error data
         return render_template('error.html', error="Gagal mengambil data. Silakan coba lagi nanti.")
     
     # ambil seluruh data dan di masukan ke variabel articles
@@ -91,17 +91,15 @@ def scrap_detik(search_term=None):
 
     # Looping setiap artikel dan ekstrak informasi
     for article in articles:
-        title = article.find('div', class_='dtr-ttl').text.strip() if article.find('div', class_='dtr-ttl') else ''
-        sub_title = article.find('a', attrs={'dtr-ttl': True}).get('dtr-ttl') if article.find('a', attrs={'dtr-ttl': True}) else ''
-        image_link = article.find('img')['src'] if article.find('img') else ''
-        body_text = article.find('div', class_='media__desc').text.strip() if article.find('div', class_='media__desc') else ''
-        tanggal_hari = article.find('div', class_='media__date').find('span')['title'] if article.find('div', class_='media__date') and article.find('div', class_='media__date').find('span') else ''
+        title = article.find('a', attrs={'dtr-ttl': True}).get('dtr-ttl') if article.find('a', attrs={'dtr-ttl': True}) else '' # ambil judul
+        image_link = article.find('img')['src'] if article.find('img') else '' # ambil link gambar
+        body_text = article.find('div', class_='media__desc').text.strip() if article.find('div', class_='media__desc') else '' # ambil sub jduul
+        tanggal_hari = article.find('div', class_='media__date').find('span')['title'] if article.find('div', class_='media__date') and article.find('div', class_='media__date').find('span') else '' #ambil tanggal dan hari
        
 
         # Tmemasukan kedalam array 
         data.append({
             'title': title,
-            'sub_title': sub_title,
             'image_link': image_link,
             'body_text': body_text,
             'publication_time': tanggal_hari
