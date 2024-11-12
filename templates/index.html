@@ -26,27 +26,7 @@
             <div class="col-md-8 offset-md-2 text-center">
                 <h1 class="display-4">Selamat Datang</h1>
                 <div class="mt-4">
-                <h2>Data Mentah</h2>
-                <pre>{{ dic | tojson(indent=2) }}</pre>
-
-                
-                {% if dic %}
-                    <h2>Data</h2>
-                    <ul class="list-group">
-                        {% for category, items in dic.items() %}
-                            <li class="list-group-item">
-                                <strong>Kategori: {{ category }}</strong>
-                                <ul>
-                                    {% for item in items %}
-                                        <li>{{ item.name }} (ID: {{ item.id }}, Sub Kategori: {{ item.sub_category }})</li>
-                                    {% endfor %}
-                                </ul>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    <p>Tidak ada data untuk ditampilkan.</p>
-                {% endif %}
+                    <a href="/scrap-detik" class="btn btn-primary">Scrap Detik.com</a>
                 </div>
             </div>
         </div>
